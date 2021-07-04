@@ -28,6 +28,13 @@ namespace Bank.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(opt =>
+                {
+                    opt.Authority = "http://localhost:5000";
+                    opt.RequireHttpsMetadata = false;
+                    opt.ApiName = "bankApi";
+                });
             services.AddDbContext<BankContext>(opts =>
             {
                 opts.UseInMemoryDatabase("BankingDb");
