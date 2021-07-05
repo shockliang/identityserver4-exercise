@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bank.Api.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Bank.Api
@@ -28,13 +30,27 @@ namespace Bank.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(opt =>
+            services
+                .AddAuthentication(opt =>
                 {
+                    opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuer = false,
+                        ClockSkew = TimeSpan.Zero       // this line help making the accurate life time validation (default value is 5 min.)
+                    };
                     opt.Authority = "http://localhost:5000";
                     opt.RequireHttpsMetadata = false;
-                    opt.ApiName = "bankApi";
+                    // opt.ApiName = "bankApi";
                 });
+            
             services.AddDbContext<BankContext>(opts =>
             {
                 opts.UseInMemoryDatabase("BankingDb");
@@ -86,6 +102,8 @@ namespace Bank.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
