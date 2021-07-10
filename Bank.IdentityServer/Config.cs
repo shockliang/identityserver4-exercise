@@ -1,11 +1,31 @@
 using System.Collections.Generic;
 using System.Runtime.Intrinsics.Arm;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 
 namespace Bank.IdentityServer
 {
     public class Config
     {
+        public static List<TestUser> GetUsers()
+        {
+            return new()
+            {
+                new()
+                {
+                    SubjectId = "1",
+                    Username = "Jeremy",
+                    Password = "myPassword"
+                },
+                new()
+                {
+                    SubjectId = "2",
+                    Username = "Molly",
+                    Password = "MollyIsMe"
+                }
+            };
+        }
+        
         public static IEnumerable<ApiScope> GetApiScopes()
         {
             return new List<ApiScope>
