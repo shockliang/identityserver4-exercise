@@ -25,7 +25,7 @@ namespace Bank.IdentityServer
                 }
             };
         }
-        
+
         public static IEnumerable<ApiScope> GetApiScopes()
         {
             return new List<ApiScope>
@@ -46,7 +46,7 @@ namespace Bank.IdentityServer
         {
             return new List<Client>
             {
-                new Client()
+                new()
                 {
                     ClientId = "client",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
@@ -58,6 +58,16 @@ namespace Bank.IdentityServer
                     {
                         "bankApi"
                     }
+                },
+                new()
+                {
+                    ClientId = "ro.client",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = {"bankApi"}
                 }
             };
         }
