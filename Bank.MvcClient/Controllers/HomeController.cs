@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bank.MvcClient.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bank.MvcClient.Controllers
 {
@@ -24,6 +25,12 @@ namespace Bank.MvcClient.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Secure()
         {
             return View();
         }
