@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.Intrinsics.Arm;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 
@@ -77,6 +78,19 @@ namespace Bank.IdentityServer
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {"bankApi"}
+                },
+                new Client()
+                {
+                    ClientId = "mvc",
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    RedirectUris = {"http://localhost:7000/signin-oidc"},
+                    PostLogoutRedirectUris = {"http://localhost:7000/signout-callback-oidc"},
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                    }
                 }
             };
         }
